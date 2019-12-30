@@ -1,0 +1,10 @@
+{
+  "domain": "meetu_ha_rsms",
+  "name": "Reversed Stream Service",
+  "documentation": "https://rsms.meetutech.com",
+  "requirements": [],
+  "dependencies": [],
+  "codeowners": [
+    "@littlepush"
+  ]
+}
