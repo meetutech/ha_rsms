@@ -13,11 +13,16 @@ git clone "git@github.com:meetutech/ha_rsms" ${HOME}/.homeassistant/custom_compo
 ```
 curl -f -o- -LS "https://raw.githubusercontent.com/meetutech/ha_rsms/master/install.sh" | bash
 ```
+如需要指定HA的配置文件目录，可执行如下代码：
+```
+curl -f -o- -LS "https://raw.githubusercontent.com/meetutech/ha_rsms/master/install.sh" | HASS_CONFIG_PATH=<config_path> bash
+```
+将其中`<config_path>`替换成实际目录即可
 
 ## 配置
 在configuration.yaml文件中，添加：
 ```
-ha_rsms
+ha_rsms:
 ```
 重启HA即可
 

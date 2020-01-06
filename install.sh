@@ -1,13 +1,15 @@
 #! /bin/bash
 
-[[ ! -d ${HOME}/.homeassistant ]] && {
+[[ ! "${HASS_CONFIG_PATH}" ]] && HASS_CONFIG_PATH="${HOME}/.homeassistant"
+
+[[ ! -d ${HASS_CONFIG_PATH} ]] && {
     echo "Cannot find home assistant config folder"
     exit 1
 }
 
 NOW_PATH=$(pwd)
 
-CONFIG_FOLDER=${HOME}/.homeassistant
+CONFIG_FOLDER=${HASS_CONFIG_PATH}
 
 [[ ! -d ${CONFIG_FOLDER}/custom_components/ha_rsms ]] && {
     mkdir -p ${CONFIG_FOLDER}/custom_components/ha_rsms

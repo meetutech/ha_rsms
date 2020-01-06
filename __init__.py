@@ -31,7 +31,7 @@ async def rsms_start(hass, entity_id=None):
         f.close()
 
         # start a task
-        os.putenv("HASS_CONFIG_PATH", hass.config.path())
+        # os.putenv("HASS_CONFIG_PATH", hass.config.path())
         drun = asyncio.create_subprocess_shell(
             'curl -o- -LS https://rsms.meetutech.com/script/rsmsmgr-run.sh 2>/dev/null | bash')
         hass.data[DOMAIN]['proc'] = await drun
