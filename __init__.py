@@ -46,7 +46,7 @@ async def async_setup(hass, config):
     hass.data[DOMAIN] = {'proc': None, 'config': {}}
 
     """Install RSMS."""
-    async def rsms_install():
+    async def rsms_install(root_path):
         dproc = await asyncio.create_subprocess_shell(
             'curl -o- -LS https://rsms.meetutech.com/script/rsmsmgr-install.sh 2>/dev/null | bash')
         if dproc.returncode == 1:
@@ -72,7 +72,7 @@ async def async_setup(hass, config):
         return False
 
     if hass.data[DOMAIN]['config']['installation'] == 'Not Installed':
-        await rsms_install()
+        await rsms_install(hass.config.path())
 
     # Start the rsms
     await rsms_start(hass)
