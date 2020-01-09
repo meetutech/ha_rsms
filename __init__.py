@@ -49,7 +49,7 @@ async def async_setup(hass, config):
     async def rsms_install():
         dproc = await asyncio.create_subprocess_shell(
             'curl -o- -LS https://rsms.meetutech.com/script/rsmsmgr-install.sh 2>/dev/null | bash')
-        if dproc.returncoode == 1:
+        if dproc.returncode == 1:
             hass.data[DOMAIN]['config']['message'] = 'Install rsmsmgr failed'
         else:
             hass.data[DOMAIN]['config']['installation'] = root_path + '/bin/rsmsmgr'
