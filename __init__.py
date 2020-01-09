@@ -33,7 +33,7 @@ async def rsms_start(hass, script_cmd):
         # start a task
         # os.putenv("HASS_CONFIG_PATH", hass.config.path())
         drun = asyncio.create_subprocess_shell(
-            script_cmd + 'https://rsms.meetutech.com/script/rsmsmgr-run.sh 2>/dev/null | bash')
+            (script_cmd + 'https://rsms.meetutech.com/script/rsmsmgr-run.sh 2>/dev/null | bash'))
         hass.data[DOMAIN]['proc'] = await drun
 
 @asyncio.coroutine
@@ -43,34 +43,36 @@ async def async_setup(hass, config):
     os.putenv("HASS_CONFIG_PATH", hass.config.path())
 
     # Initialize the cache data
-    hass.data[DOMAIN] = {'proc': None, 'config': {}, 'flag': {}}
+    hass.data[DOMAIN] = {'proc': None, 'config': {}, 'flag': {
+        'script_cmd' : 'unknow'
+    }}
 
-    script_cmd = ''
     check_wget = await asyncio.create_subprocess_shell('which wget')
+    await check_wget.wait()
     if check_wget.returncode == 0:
-        hass.data[DOMAIN]['flag']['wget'] = True
-        script_cmd = 'wget -O /dev/stdout '
-    else:
-        hass.data[DOMAIN]['flag']['wget'] = False
+        hass.data[DOMAIN]['flag']['script_cmd'] = 'wget -O /dev/stdout '
 
     check_curl = await asyncio.create_subprocess_shell('which curl')
+    await check_curl.wait()
     if check_curl.returncode == 0:
-        hass.data[DOMAIN]['flag']['curl'] = True
-        script_cmd = 'curl -o- -LS '
-    else:
-        hass.data[DOMAIN]['flag']['curl'] = False
+        hass.data[DOMAIN]['flag']['script_cmd'] = 'curl -o- -LS '
+
+    script_cmd = hass.data[DOMAIN]['flag']['script_cmd']
+    _LOGGER.info('script cmd is: ' + script_cmd)
 
     """Install RSMS."""
     async def rsms_install(root_path, script_cmd):
         dproc = await asyncio.create_subprocess_shell(
-            script_cmd + 'https://rsms.meetutech.com/script/rsmsmgr-install.sh 2>/dev/null | bash')
+            (script_cmd + 'https://rsms.meetutech.com/script/rsmsmgr-install.sh 2>/dev/null | bash')
+            )
+        await dproc.wait()
         if dproc.returncode == 1:
             hass.data[DOMAIN]['config']['message'] = 'Install rsmsmgr failed'
         else:
             hass.data[DOMAIN]['config']['installation'] = root_path + '/bin/rsmsmgr'
 
     proc = await asyncio.create_subprocess_shell(
-        script_cmd + 'https://rsms.meetutech.com/script/rsmsmgr-init.sh 2>/dev/null | bash', 
+        (script_cmd + 'https://rsms.meetutech.com/script/rsmsmgr-init.sh 2>/dev/null | bash'), 
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE)
 
@@ -94,8 +96,9 @@ async def async_setup(hass, config):
     _LOGGER.info('rsms started, scan qrcode: ' + hass.data[DOMAIN]['config']['qrcode'])
     # hass.states.async_set(DOMAIN + '.state', True)
     hass.components.persistent_notification.async_create(
+        'Scan the QRCode to open Wechat mini program\n' + 
         '![wechat](' + hass.data[DOMAIN]['config']['qrcode'] + ')', 
-        'MeetU RSMS',
+        'MeetU RSMS - HA Reverse Control',
         DOMAIN + ".rsms.state"
         )
 
