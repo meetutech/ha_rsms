@@ -42,6 +42,7 @@ mkdir -p ${CONFIG_FOLDER}/rsms_bin
 mkdir -p ${CONFIG_FOLDER}/rsms_bin/tmp
 mkdir -p ${CONFIG_FOLDER}/rsms_bin/bin
 mkdir -p ${CONFIG_FOLDER}/rsms_bin/lib
+mkdir -p ${CONFIG_FOLDER}/rsms_bin/etc
 
 TEMP_DIR=${CONFIG_FOLDER}/rsms_bin/tmp
 BIN_DIR=${CONFIG_FOLDER}/rsms_bin/bin
@@ -58,6 +59,6 @@ cd ${TEMP_DIR}
 tar xzvf ./rsmsmgr.tgz
 # Copy all data
 cp ./rsmsmgr/bin/rsmsmgr ${BIN_DIR}/
-cp ./rsmsmgr/lib/* ${LIB_DIR}/
+#cp ./rsmsmgr/lib/* ${LIB_DIR}/
 echo "Install Success!"
 cd ${NOW} >/dev/null 2>&1
